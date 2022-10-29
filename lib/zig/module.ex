@@ -37,7 +37,8 @@ defmodule Zig.Module do
                 link_libc: link_libc,
                 link_libcpp: false,
                 sources: [],
-                test_dirs: nil
+                test_dirs: nil,
+                local_zig: false,
               ]
 
   @type t :: %__MODULE__{
@@ -60,7 +61,8 @@ defmodule Zig.Module do
           sources: [source],
           code: iodata,
           version: Version.t(),
-          test_dirs: nil | [Path.t()]
+          test_dirs: nil | [Path.t()],
+          local_zig: boolean
         }
 
   @type source :: String.t() | {String.t(), [String.t()]}

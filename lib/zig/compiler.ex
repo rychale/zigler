@@ -31,12 +31,12 @@ defmodule Zig.Compiler do
     module = Module.get_attribute(context.module, :zigler)
     Module.register_attribute(context.module, :nif_code_map, persist: true)
 
-    zig_tree = Path.join(@zig_dir_path, Command.version_name(module.zig_version))
-
     zig_root_dir =
-      zig_tree
+      Path.join(@zig_dir_path, Command.version_name(module.zig_version))
       |> zig_location(module)
       |> resolve
+
+    zig_tree = Path.expand("..", zig_root_dir)
 
     Module.register_attribute(context.module, :zig_root_dir, persist: true)
     Module.put_attribute(context.module, :zig_root_dir, zig_root_dir)
@@ -114,9 +114,9 @@ defmodule Zig.Compiler do
     end)
   end
 
-  @local_zig Application.compile_env(:zigler, :local_zig, false)
+  @local_zig Application.compile_env(:zigler, :local_zig)
 
-  defp zig_location(zig_tree, module), do: zig_location(zig_tree, module, @local_zig)
+  defp zig_location(zig_tree, module), do: zig_location(zig_tree, module, @local_zig || module.local_zig)
 
   defp zig_location(_, _, true), do: System.find_executable("zig")
 

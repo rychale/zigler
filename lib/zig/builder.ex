@@ -28,8 +28,7 @@ defmodule Zig.Builder do
 
   def target_struct(:host, zig_tree) do
     {targets, 0} =
-      zig_tree
-      |> Path.join("zig")
+      Path.expand("bin/zig", zig_tree)
       |> System.cmd(["targets"])
 
     %{"abi" => abi, "cpu" => %{"arch" => arch}, "os" => os} =

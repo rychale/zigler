@@ -14,7 +14,7 @@ defmodule Zig.Command do
   ## API
 
   def compile(compiler, zig_tree) do
-    zig_executable = executable_path(zig_tree)
+    zig_executable = executable_path(zig_tree, compiler.module_spec)
 
     opts = [cd: compiler.assembly_dir, stderr_to_stdout: true]
 
@@ -63,13 +63,12 @@ defmodule Zig.Command do
     :ok
   end
 
-  @local_zig Application.get_env(:zigler, :local_zig, false)
-
-  defp executable_path(zig_tree), do: executable_path(zig_tree, @local_zig)
-
+  @local_zig Application.get_env(:zigler, :local_zig)
+ 
   defp executable_path(zig_tree, false), do: Path.join(zig_tree, "zig")
   defp executable_path(_, true), do: System.find_executable("zig")
-  defp executable_path(_, path), do: path
+  defp executable_path(_, path) when is_binary(path), do: path
+  defp executable_path(zig_tree, module), do: executable_path(zig_tree, @local_zig || module.local_zig)
 
   defp maybe_rename_library_filename(fullpath) do
     if Path.extname(fullpath) == ".dylib" do
