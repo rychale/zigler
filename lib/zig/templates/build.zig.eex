@@ -66,5 +66,6 @@ pub fn build(b: *Builder) void {
     // for (cfiles) |c_file| {
     //     lib.addCSourceFile(c_file, &cflags);
     // }
+    b.use_stage1 = true;
     lib.install();
 }

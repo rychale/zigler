@@ -9,13 +9,12 @@ const MutexError = error {
 pub fn BeamMutex(comptime name: []const u8) type {
     return struct {
         mutex_ref: ?*e.ErlNifMutex = null,
-        const name: []const u8 = name;
         const Self = @This();
 
         /// initializes the mutex.  Note this is failable.
         pub fn init(self: *Self) !void {
             if (self.mutex_ref) |_| {} else {
-                self.mutex_ref = e.enif_mutex_create(self.name) orelse
+                self.mutex_ref = e.enif_mutex_create(name) orelse
                     return MutexError.CreationFail;
             }
         }
