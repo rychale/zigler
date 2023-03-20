@@ -12,12 +12,12 @@ pub fn build(b: *Builder) void {
         .{ .versioned = .{.major = <%= @module_spec.version.major %>,
                           .minor = <%= @module_spec.version.minor %>,
                           .patch = <%= @module_spec.version.patch %>}});
-    lib.addSystemIncludeDir("<%= :code.root_dir %>/erts-<%= :erlang.system_info(:version) %>/include");
+    lib.addSystemIncludePath("<%= :code.root_dir %>/erts-<%= :erlang.system_info(:version) %>/include");
     <%= for dir <- dirs_for(target) do %>
-    lib.addSystemIncludeDir("<%= Path.join(zig_tree, dir) %>");
+    lib.addSystemIncludePath("<%= Path.join(zig_tree, dir) %>");
     <% end %>
     <%= for system_include_dir <- @module_spec.system_include_dirs do %>
-    lib.addSystemIncludeDir("<%= system_include_dir %>");
+    lib.addSystemIncludePath("<%= system_include_dir %>");
     <% end %>
     <%= for include_dir <- @module_spec.include_dirs do %>
     lib.addIncludeDir("<%= include_dir %>");
